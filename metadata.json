@@ -1,0 +1,6 @@
+{
+  "name": "PhishShield ML - Phishing Email Detection System",
+  "description": "Production-grade phishing email detection dashboard using Scikit-Learn machine learning pipelines, interactive confusion matrix, feature explainability, and cyber defense recommendations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

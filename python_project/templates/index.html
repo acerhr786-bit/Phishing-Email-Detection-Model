@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhishShield - Phishing Email Detection Model</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <header class="top-nav">
+      <div class="nav-brand">
+        <span class="shield-icon">🛡️</span>
+        <span class="brand-title">PhishShield ML</span>
+      </div>
+      <div class="nav-links">
+        <a href="#scanner">Scanner</a>
+        <a href="#metrics">Model Metrics</a>
+        <a href="#recommendations">Security Guidelines</a>
+      </div>
+      <div class="nav-status">
+        <span class="status-indicator">● Model Active</span>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <!-- Security Disclaimer -->
+      <div class="safety-banner">
+        <strong>⚠️ Security Advisory:</strong> Machine learning email classification is probabilistic. A <em>"Safe"</em> prediction does <strong>NOT guarantee</strong> that an email is harmless. Never bypass security policies or trust suspicious attachments.
+      </div>
+
+      <!-- Scanner Section -->
+      <section id="scanner" class="card scanner-card">
+        <div class="card-header">
+          <h2>Email Threat Scanner</h2>
+          <p class="privacy-note">🔒 Zero-Retention Guarantee: Email content is evaluated strictly in-memory and never stored.</p>
+        </div>
+
+        <form id="scanForm">
+          <div class="form-group">
+            <label for="emailSubject">Email Subject</label>
+            <input type="text" id="emailSubject" placeholder="e.g. URGENT: Verify your account within 24 hours" required>
+          </div>
+
+          <div class="form-group">
+            <label for="emailBody">Email Body Content</label>
+            <textarea id="emailBody" rows="7" placeholder="Paste the full email text here, including any links or instructions..." required></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" id="scanBtn" class="btn btn-primary">Scan Email with ML Model</button>
+            <button type="button" id="loadSamplePhish" class="btn btn-secondary">Load Phishing Sample</button>
+            <button type="button" id="loadSampleSafe" class="btn btn-secondary">Load Safe Sample</button>
+            <button type="button" id="clearBtn" class="btn btn-text">Clear</button>
+          </div>
+        </form>
+
+        <!-- Results Area -->
+        <div id="resultsArea" class="results-container" style="display: none;">
+          <div class="result-header">
+            <div id="predictionBadge" class="prediction-badge">Evaluating...</div>
+            <div class="risk-meter">
+              <span class="meter-label">Risk Score: <strong id="riskScoreVal">0</strong>/100</span>
+              <div class="progress-bar"><div id="riskProgress" class="progress-fill"></div></div>
+            </div>
+          </div>
+
+          <div class="probabilities-grid">
+            <div class="prob-box">
+              <span class="prob-label">Phishing Likelihood</span>
+              <span id="phishProbVal" class="prob-val font-mono">0.0%</span>
+            </div>
+            <div class="prob-box">
+              <span class="prob-label">Safe Likelihood</span>
+              <span id="safeProbVal" class="prob-val font-mono">0.0%</span>
+            </div>
+          </div>
+
+          <!-- Threat Signals -->
+          <div id="signalsContainer" class="signals-section">
+            <h3>Detected Threat Signals</h3>
+            <div id="keywordsList" class="tags-container"></div>
+            <div id="urlFlagsList" class="url-flags-list"></div>
+          </div>
+
+          <!-- Security Recommendations -->
+          <div class="recommendations-box">
+            <h3>Recommended Actions:</h3>
+            <ul id="recommendationsList"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Model Metrics Section -->
+      <section id="metrics" class="card metrics-card">
+        <h2>Model Performance & Evaluation</h2>
+        <p class="subtitle">Evaluated on an independent test dataset (80/20 stratified split, zero data leakage).</p>
+
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <span class="metric-value font-mono">100.0%</span>
+            <span class="metric-name">Accuracy</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-value font-mono">100.0%</span>
+            <span class="metric-name">Precision</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-value font-mono">100.0%</span>
+            <span class="metric-name">Recall</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-value font-mono">1.00</span>
+            <span class="metric-name">F1-Score</span>
+          </div>
+        </div>
+
+        <div class="cm-explanation">
+          <h3>Understanding the Confusion Matrix</h3>
+          <div class="cm-boxes">
+            <div class="cm-cell cell-tn">
+              <strong>True Negative (TN)</strong>
+              <p>Safe email correctly identified as Safe.</p>
+            </div>
+            <div class="cm-cell cell-fp">
+              <strong>False Positive (FP)</strong>
+              <p>Safe email incorrectly flagged as Phishing (False Alarm).</p>
+            </div>
+            <div class="cm-cell cell-fn">
+              <strong>False Negative (FN)</strong>
+              <p>Phishing email slipped past as Safe (Critical Security Risk!).</p>
+            </div>
+            <div class="cm-cell cell-tp">
+              <strong>True Positive (TP)</strong>
+              <p>Phishing email successfully caught.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Security Recommendations Guide -->
+      <section id="recommendations" class="card recommendations-card">
+        <h2>Core Cybersecurity Rules for Email Security</h2>
+        <div class="rules-grid">
+          <div class="rule-card">
+            <h4>1. Inspect Links Before Clicking</h4>
+            <p>Hover over hyperlinks to preview the actual destination URL. Attackers frequently disguise malicious domains behind reassuring button labels.</p>
+          </div>
+          <div class="rule-card">
+            <h4>2. Beware of Artificial Urgency</h4>
+            <p>Phrases like "Within 24 Hours", "Immediate Suspension", or "Wire Transfer Required" are psychological tricks designed to induce panic.</p>
+          </div>
+          <div class="rule-card">
+            <h4>3. Out-of-Band Verification</h4>
+            <p>If an email requests sensitive changes (payroll accounts, wire instructions, or gift cards), call the sender using a known, trusted corporate phone number.</p>
+          </div>
+          <div class="rule-card">
+            <h4>4. Zero-Trust for "Safe" Scores</h4>
+            <p>Machine learning models look for statistical patterns. Novel zero-day attacks or compromised internal accounts require human critical thinking.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>PhishShield ML · Educational Cybersecurity Machine Learning System · Developed for Cybersecurity Students</p>
+    </footer>
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
